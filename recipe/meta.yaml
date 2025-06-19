@@ -1,5 +1,5 @@
 {% set name = "ipyslides" %}
-{% set version = "3.1.7" %}
+{% set version = "5.6.0" %}
 
 
 package:
@@ -7,8 +7,8 @@ package:
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/ipyslides-{{ version }}.tar.gz
-  sha256: cb1d15e7052956c1442b32749b0de91ad91b1306ffe3f88db1be27e9ebae9579
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/ipyslides-{{ version }}.tar.gz
+  sha256: 4e743c930fe9f82bfa7518e56dea4efec71b02c791203da47945bcaa480b0b5e
 
 build:
   number: 0
@@ -17,27 +17,32 @@ build:
 
 requirements:
   host:
-    - ipywidgets >=8.0.4
-    - markdown
-    - markdown-customblocks
+    - python {{ python_min }}
     - pip
-    - pillow >=9.3.0
-    - python >=3.6
+    - setuptools
   run:
-    - ipywidgets
+    - python >={{ python_min }}
     - markdown
     - markdown-customblocks
-    - pillow
-    - python >=3.6
+    - ipywidgets >=8.0.4
+    - pillow >=9.3.0
+    - anywidget ==0.9.13
+    # tldraw 2.2.4 is malformed and cannot be onboarded to conda
+    - tldraw >=2.2.4
+
+    # Not listed but pip check complains
+    - numpy
 
 test:
-  imports:
-    - ipyslides
+  files:
+    - ipython_test.py
   commands:
-    - pip check
+    # Skip pip check because of tldraw
+    # - pip check
+    - ipython ipython_test.py
   requires:
     - pip
-
+    - python {{ python_min }}
 about:
   home: https://github.com/asaboor-gh/ipyslides
   doc_url: https://asaboor-gh.github.io/ipyslides/
